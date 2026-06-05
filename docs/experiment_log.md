@@ -99,3 +99,136 @@ The current proof-of-concept establishes feasibility, not scientific evidence. T
 2. Compare chaos modulation against norm-matched Gaussian noise and permuted ChaosFEX.
 3. Measure representational drift and neighborhood preservation before task claims.
 4. Only after geometric signal is confirmed, test small downstream probes or robustness tasks.
+
+## One-week experiment design
+
+Goal: determine whether ChaosFEX produces meaningful, chaos-specific effects on frozen transformer representations.
+
+### Research questions
+
+1. Do chaos-inspired transformations measurably alter embeddings and hidden states?
+2. Are those alterations different from Gaussian noise at matched norm?
+3. Do chaos transformations reveal or preserve properties not captured by standard probing and geometry methods?
+
+### Models
+
+Start small:
+
+- `gpt2` or `distilgpt2` for continuity with the current repository.
+- `bert-base-uncased` or `distilbert-base-uncased` for bidirectional representation-analysis comparison.
+
+Do not use large instruction-tuned LLMs for the first week.
+
+### Datasets
+
+Use small, standard, easily cached subsets:
+
+- SST-2 dev/train subset for sentence-level sentiment geometry.
+- CoLA or MRPC subset for syntax/acceptability or paraphrase sensitivity.
+- Universal Dependencies English subset if structural probing is attempted.
+- A handcrafted prompt-perturbation set only as an auxiliary diagnostic, not as the main claim.
+
+### Conditions
+
+For each prompt/sentence embedding matrix:
+
+- Original embedding.
+- ChaosFEX modulation.
+- Gaussian noise modulation with equal Frobenius norm.
+- Uniform noise modulation with equal Frobenius norm.
+- Shuffled ChaosFEX features.
+- Random projection or random Fourier features reduced to embedding width.
+- Nonchaotic deterministic map if easy to implement.
+
+### Parameters to vary
+
+- `alpha`: `[0.005, 0.01, 0.05, 0.1]`.
+- `Q`: at least 3 initial conditions.
+- `B`: at least 3 thresholds.
+- `EPS`: at least 3 values.
+- `TRAJ_LEN`: `[100, 1000, 5000]`, compute permitting.
+
+### Metrics
+
+Representation shift:
+
+- Mean cosine similarity between original and transformed token embeddings.
+- Frobenius norm of perturbation.
+- Pairwise distance distortion.
+- Per-token and per-dimension variance change.
+
+Representation geometry:
+
+- PCA explained-variance spectra.
+- Anisotropy / average cosine similarity.
+- Local neighborhood preservation at `k = 5, 10, 20`.
+- Trustworthiness and continuity for low-dimensional projections.
+
+Representation similarity:
+
+- Linear CKA between original and transformed embeddings.
+- CKA across hidden layers after feeding transformed embeddings.
+- SVCCA as a secondary check for representation similarity.
+
+Optional probing:
+
+- Linear probe on original embeddings.
+- Linear probe on ChaosFEX-expanded/reduced embeddings.
+- MLP probe with capacity control.
+- Control-label selectivity.
+
+Optional robustness:
+
+- Prediction stability under small lexical perturbations.
+- Semantic similarity preservation using a fixed sentence encoder, if available.
+- Only report as exploratory unless strongly controlled.
+
+### Visualizations
+
+- PCA spectrum plots.
+- PCA/t-SNE/UMAP 2D scatter plots, clearly labeled exploratory.
+- Heatmaps of layerwise CKA for original vs chaos/noise.
+- Line plots of metrics versus `alpha`.
+- Boxplots over prompts/sentences for chaos vs baselines.
+
+### Statistical tests
+
+- Paired bootstrap confidence intervals over examples.
+- Wilcoxon signed-rank test for paired chaos vs Gaussian metric differences.
+- Benjamini-Hochberg correction if many metrics are tested.
+- Effect sizes, not only p-values.
+
+### Minimal success criteria
+
+GO signal:
+
+- ChaosFEX differs consistently from norm-matched Gaussian and shuffled baselines on at least two quantitative metrics.
+- Effects are stable across prompts and at least one model family.
+- Parameter trends are interpretable rather than random.
+
+PIVOT signal:
+
+- ChaosFEX differs from noise geometrically but has no probing or robustness value.
+- Keep the representation-analysis story and avoid applied robustness claims.
+
+ABANDON signal:
+
+- ChaosFEX behaves like norm-matched noise or random features across metrics.
+- Results are dominated by normalization artifacts.
+- Effects vanish outside one hand-picked prompt.
+
+### One-week schedule
+
+Day 1: refactor minimally for repeatable extraction and logging.
+
+Day 2: implement baselines and norm matching.
+
+Day 3: run small GPT-2/DistilGPT-2 geometry metrics.
+
+Day 4: add BERT/DistilBERT comparison and layerwise CKA.
+
+Day 5: run ablations over `alpha`, `Q`, `B`, `EPS`, and trajectory length.
+
+Day 6: optional probing only if geometry signal exists.
+
+Day 7: write results, limitations, and go/no-go decision.
