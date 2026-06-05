@@ -1,0 +1,12 @@
+2026-06-06 00:59:57,510 INFO Loaded 8 prompts from experiments\prompts_geometry.txt
+2026-06-06 00:59:57,642 INFO Processed p000 with shape (11, 64)
+2026-06-06 00:59:57,692 INFO Processed p001 with shape (12, 64)
+2026-06-06 00:59:57,727 INFO Processed p002 with shape (10, 64)
+2026-06-06 00:59:57,761 INFO Processed p003 with shape (9, 64)
+2026-06-06 00:59:57,807 INFO Processed p004 with shape (13, 64)
+2026-06-06 00:59:57,843 INFO Processed p005 with shape (11, 64)
+2026-06-06 00:59:57,890 INFO Processed p006 with shape (12, 64)
+2026-06-06 00:59:57,935 INFO Processed p007 with shape (14, 64)
+2026-06-06 01:00:03,593 INFO Wrote metrics to outputs\geometry\sample_hash_run\metrics.csv
+2026-06-06 01:00:03,593 INFO Wrote summary to outputs\geometry\sample_hash_run\summary.json
+2026-06-06 01:00:03,594 INFO Wrote figures to outputs\geometry\sample_hash_run\figures

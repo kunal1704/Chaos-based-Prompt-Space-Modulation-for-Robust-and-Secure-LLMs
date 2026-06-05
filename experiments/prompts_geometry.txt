@@ -1,0 +1,9 @@
+# Small neutral prompt set for geometry-only smoke experiments.
+The model maps language into a high dimensional representation space.
+Small perturbations can change local geometry without changing the input text.
+Representation analysis compares vectors, neighborhoods, and spectra.
+Chaos inspired feature expansion is deterministic and nonlinear.
+Gaussian noise is stochastic and should be norm matched for fair comparison.
+Shuffled chaos preserves the perturbation distribution but destroys coordinate structure.
+Token embeddings can be studied before any downstream task is introduced.
+The experiment records cosine drift, distance distortion, anisotropy, and CKA.

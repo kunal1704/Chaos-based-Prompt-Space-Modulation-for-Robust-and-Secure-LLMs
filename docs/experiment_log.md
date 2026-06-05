@@ -232,3 +232,55 @@ Day 5: run ablations over `alpha`, `Q`, `B`, `EPS`, and trajectory length.
 Day 6: optional probing only if geometry signal exists.
 
 Day 7: write results, limitations, and go/no-go decision.
+
+## 2026-06-06: Minimal geometry suite implementation
+
+Branch: `research/exploratory`
+
+Scope: geometry and chaos-vs-noise comparisons only. No robustness, prompt-injection, or downstream-task code was added.
+
+### Implemented
+
+- Reusable `chaos_llm` package:
+  - `embedding_sources.py`: Hugging Face embedding source plus deterministic local hash embeddings.
+  - `chaos.py`: ChaosFEX normalization, expansion, reduction, and delta construction.
+  - `baselines.py`: norm-matched Gaussian, norm-matched uniform, and shuffled-chaos baselines.
+  - `metrics.py`: cosine drift, perturbation norm, distance distortion, anisotropy, variance ratio, linear CKA, and neighborhood preservation.
+  - `plotting.py`: metric-by-alpha plots, PCA spectrum, and PCA scatter.
+  - `io.py`: prompt loading and structured output helpers.
+- CLI entry point: `experiments/run_geometry_suite.py`.
+- Prompt file: `experiments/prompts_geometry.txt`.
+- Usage documentation: `docs/geometry_experiment_suite.md`.
+- Sample output run: `outputs/geometry/sample_hash_run/`.
+
+### Reproducibility note
+
+The available conda environment has NumPy, SciPy, sklearn, pandas, and matplotlib, but not `torch` or `transformers`. Therefore the committed sample run uses `--embedding-source hash`, a deterministic local embedding source intended as an end-to-end reproducibility smoke test.
+
+To generate scientifically meaningful GPT-2/BERT embedding results, rerun the same CLI with `--embedding-source hf` in an environment where `torch`, `transformers`, and model weights are available.
+
+### Sample run command
+
+```powershell
+conda run python experiments/run_geometry_suite.py
+```
+
+### Sample outputs
+
+- Metrics: `outputs/geometry/sample_hash_run/metrics.csv`
+- Summary: `outputs/geometry/sample_hash_run/summary.json`
+- Figures: `outputs/geometry/sample_hash_run/figures/`
+
+### Smoke-run observations
+
+On the deterministic hash embedding smoke run:
+
+- All baselines are Frobenius-norm matched to the ChaosFEX perturbation for each prompt and alpha.
+- Chaos and shuffled-chaos produce similar anisotropy trends, which is an important warning that distributional effects may dominate coordinate structure in this toy source.
+- Gaussian and uniform baselines produce much larger pairwise-distance distortion at higher alpha than chaos/shuffled-chaos in the sample run.
+- These observations validate the comparison machinery but should not be treated as claims about transformer embeddings.
+
+### Verification
+
+- `conda run python experiments/run_geometry_suite.py`
+- `conda run python -m py_compile chaos_llm\baselines.py chaos_llm\chaos.py chaos_llm\embedding_sources.py chaos_llm\io.py chaos_llm\metrics.py chaos_llm\plotting.py experiments\run_geometry_suite.py`

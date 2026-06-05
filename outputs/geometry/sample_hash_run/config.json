@@ -1,0 +1,30 @@
+{
+  "alphas": [
+    0.01,
+    0.05,
+    0.1
+  ],
+  "chaos": {
+    "epsilon": 0.01,
+    "initial_condition": 0.2,
+    "threshold": 0.5,
+    "trajectory_length": 100
+  },
+  "created_at_utc": "2026-06-05T19:29:57.496385+00:00",
+  "embedding_source": "hash",
+  "excluded": [
+    "robustness",
+    "prompt_injection",
+    "downstream_tasks"
+  ],
+  "hash_dim": 64,
+  "k_values": [
+    3,
+    5,
+    10
+  ],
+  "model_name": "hash-embedding-v1",
+  "reduction": "mean",
+  "scope": "geometry_only_chaos_vs_noise",
+  "seed": 1704
+}
